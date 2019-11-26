@@ -1,0 +1,33 @@
+---
+title: "nbagogn"
+author: "hallidabba"
+date: "10/18/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(stringr)
+library(lattice)
+library(latex2exp)
+library(car)
+library(geoR)
+library(MASS)
+library(latex2exp)
+library(kableExtra)
+```
+
+
+
+```{r}
+nba<-read.csv(file="nbaallelo_csv.csv",sep="",header = F)
+
+```
+
