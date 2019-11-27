@@ -35,7 +35,7 @@ library(kableExtra)
 ```
 # Inngangur
 
-Gögnin sem þetta verkefni byggir á eru fengin frá opinberri gagnasíðu Alþjóðabankans, datacatalog.worldbank.org. Fyrra gagnasettið, sótt af https://data.worldbank.org/indicator/ny.gdp.mktp.cd sýnir verga landsframleiðslu allra landa veraldar, ásamt ákveðinna landsvæða (t.d. í Suður-Aasíu eða Mið-Austurlöndum og Norður-Afríku) miðað við höfðatölu í bandaríkjadölum. Einnig má þar finna verga landsframleiðslu m.v. höfðatölu landa sem falla undir aðra flokka, s.s. og hátekju- og lágtekjulönd, þróunarlönd (skv. skilgreiningu Efnahags- og framfarastofnunarinnar, OECD) o.fl. Seinna gagnasettið, sótt af https://data.worldbank.org/indicator/DT.ODA.ODAT.CD, er sett upp á sama máta og það fyrra, en það byggir á upplýsingum um hve mikla þróunaraðstoð hvert land hefur notið á hverju ári, í bandaríkjaddölum talið. Bæði gagnasettin verða síðan síuð þannig að auðveldara verður að skoða gögnin á myndrænan máta. Byggt er á gögnum einstakra landa, og einnig eru lönd flokkuð eftir landsvæðum. Markmið þessa verkefnis er tvíþætt, annars vegar að kanna verga landsframleiðslu og þróunaraðstoð m.v. höfðatölu hinna ýmissu landa og setja gögnin fram á myndrænan hátt. Hins veger verða tengslin milli vergrar landsframleiðslu og þróunaraðstoðar könnuð, þ.e, hvort hærri verg landsframleiðsla á hvern íbúa og minna umfang þróunaraðstoðar haldist í hendur.
+Gögnin sem þetta verkefni byggir á eru fengin frá opinberri gagnasíðu Alþjóðabankans, datacatalog.worldbank.org. Fyrra gagnasettið, sótt af https://data.worldbank.org/indicator/ny.gdp.mktp.cd sýnir verga landsframleiðslu allra landa veraldar, ásamt ákveðinna landsvæða (t.d. í Suður-Aasíu eða Mið-Austurlöndum og Norður-Afríku) miðað við höfðatölu í bandaríkjadölum. Einnig má þar finna verga landsframleiðslu m.v. höfðatölu landa sem falla undir aðra flokka, s.s. og hátekju- og lágtekjulönd, þróunarlönd (skv. skilgreiningu Efnahags- og framfarastofnunarinnar, OECD) o.fl. Seinna gagnasettið, sótt af https://data.worldbank.org/indicator/DT.ODA.ODAT.CD, er sett upp á sama máta og það fyrra, en það byggir á upplýsingum um hve mikla þróunaraðstoð hvert land hefur notið á hverju ári, í bandaríkjaddölum talið. Bæði gagnasettin verða síðan síuð þannig að auðveldara verður að skoða gögnin á myndrænan máta. Byggt er á gögnum einstakra landa, og einnig eru lönd flokkuð eftir landsvæðum. Markmið þessa verkefnis er tvíþætt, annars vegar að kanna verga landsframleiðslu og þróunaraðstoð m.v. höfðatölu hinna ýmissu landa og setja gögnin fram á myndrænan hátt. Hins vegar verða tengslin milli vergrar landsframleiðslu og þróunaraðstoðar könnuð, þ.e, hvort hærri verg landsframleiðsla á hvern íbúa og minna umfang þróunaraðstoðar haldist í hendur.
 
 
 
@@ -47,7 +47,7 @@ Gögnin eru lesin inn og í kjölfarið eru þau hreinsuð. Ýmsir dálkar, ása
 
 
 ```{r, warning=FALSE}
-gdp<-read.csv(file="gdp/API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_382630.csv",sep=",",skip=4,header=T)
+gdp<-read.csv(file="gdp2/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_511373.csv",sep=",",skip=4,header=T)
 devaid<-read.csv(file="devhelp/API_DT.ODA.ODAT.CD_DS2_en_csv_v2_385593.csv",sep=",",skip=4,header=T)
 colnames(gdp)<-gsub('X',"",colnames(gdp),fixed=TRUE)
 colnames (devaid)<-gsub('X',"",colnames(devaid),fixed=TRUE)
@@ -59,30 +59,34 @@ head(gdp %>% select(1:9))
   
 ## Gagnaummyndun
 
-Gögnunum er breytt, tvær nýjar töflur eru lesnar inn fyrir sitt hvora töfluna, þ.e. gdp og devaid, með því að nota melt skipunina. Fyrir töfluna sem geymir verga landsframleiðslu eru töflurnar gdp_by_country_name og gdp_by_country_code búnar til. Báðar töflurnar innihalda þrjá dálka, bæði hafa þau Year, sem geymir árið, GDP_per_capita sem geymir verga landsframleiðsluna m.v. höfðatölu. Auk þess inniheldur önnur þeirra Country_name sem geymir nafn landsins, en hin Country_id sem geymir auðkennisbókstafi landsins. Ástæðan fyrir þeessari skiptingu er vegna þess að þegar Country.name er borið saman við nafn á sama landi í öðru landagagnasetti gætu nöfnin verið á mismunandi formi. T.d. er country name fyrir Rússland "Russian Federation" en í einhverju öðru gæti það verið "Russia". Country.id-ið myndi hins vegar mjög sennilega vera það sama. Sama skiptingin var síðan gerð fyir devaid töfluna nema að Development_help dálkurinn kom í staðinn fyrir GDP_per_capita. Eftir þessa síu eru gögnin komin á betra form fyrir frekari úrvinnslu gagnanna. Fyrir neðan kóðann eru allir dálkar og 6 fyrstu línur í öllum gagnasettunum. \n
+Gögnunum er breytt, tvær nýjar töflur eru lesnar inn fyrir sitt hvora töfluna, þ.e. gdp og devaid, með því að nota melt skipunina. Fyrir töfluna sem geymir verga landsframleiðslu eru töflurnar gdp_by_country_name og gdp_by_country_code búnar til. Báðar töflurnar innihalda þrjá dálka, bæði hafa þau Year, sem geymir árið, GDP_per_capita sem geymir verga landsframleiðsluna m.v. höfðatölu. Auk þess inniheldur önnur þeirra Country_name sem geymir nafn landsins, en hin Country_id sem geymir auðkennisbókstafi landsins. Ástæðan fyrir þeessari skiptingu er vegna þess að þegar Country.name er borið saman við nafn á sama landi í öðru landagagnasetti gætu nöfnin verið á mismunandi formi. T.d. er country name fyrir Rússland "Russian Federation" en í einhverju öðru gæti það verið "Russia". Country id-ið myndi hins vegar mjög sennilega vera það sama. Sama skiptingin var síðan gerð fyir devaid töfluna nema að Development_help dálkurinn kom í staðinn fyrir GDP_per_capita. Eftir þessa síu eru gögnin komin á betra form fyrir frekari úrvinnslu gagnanna. Fyrir neðan kóðann eru allir dálkar og 6 fyrstu línur í öllum gagnasettunum. \n
 
 
   
 ```{r, warning=FALSE}
 gdp_by_country_code<-gdp
-gdp_by_country_name <- gdp[ -c(2:34,64) ]
-gdp_by_country_code <- gdp_by_country_code[ -c(1, 3:34) ]
+gdp_by_country_name <- gdp[ -c(2:4,64) ]
+gdp_by_country_code <- gdp[ -c(1,3,4,34) ]
 gdp_by_country_name<-melt(gdp_by_country_name,"Country.Name")
 gdp_by_country_code<-melt(gdp_by_country_code,"Country.Code")
 colnames(gdp_by_country_name)<-c("Country_name", "Year", "GDP_per_capita")
 gdp_by_country_name$Year<-as.integer(as.character(gdp_by_country_name$Year))
+gdp_by_country_name <- na.omit(gdp_by_country_name)
 colnames(gdp_by_country_code)<-c("Country_id", "Year", "GDP_per_capita")
 gdp_by_country_code$Year<-as.integer(as.character(gdp_by_country_code$Year))
+gdp_by_country_code <- na.omit(gdp_by_country_code)
 
 devaid_by_country_code<-devaid
-devaid_by_country_name <- devaid[ -c(2:34,64) ]
-devaid_by_country_code <- devaid_by_country_code[ -c(1, 3:34) ]
+devaid_by_country_name <- devaid[ -c(2:4,64) ]
+devaid_by_country_code <- devaid_by_country_code[ -c(1,3,4,34) ]
 devaid_by_country_name<-melt(devaid_by_country_name,"Country.Name")
 devaid_by_country_code<-melt(devaid_by_country_code,"Country.Code")
 colnames(devaid_by_country_name)<-c("Country_name", "Year", "Development_aid")
 devaid_by_country_name$Year<-as.integer(as.character(devaid_by_country_name$Year))
+devaid_by_country_name <- na.omit(devaid_by_country_name)
 colnames(devaid_by_country_code)<-c("Country_id", "Year", "Development_aid")
 devaid_by_country_code$Year<-as.integer(as.character(devaid_by_country_code$Year))
+devaid_by_country_code <- na.omit(devaid_by_country_code)
 
 head(gdp_by_country_name)
 head(gdp_by_country_code)
@@ -93,7 +97,7 @@ head(devaid_by_country_code)
 
 ## Myndræn framsetning á vergri landsframleiðslu
 
-Hér er gdp gögnunum lýst myndrænt með ýmsum föllum. Það fyrsta, lineplot_country_gdp_by_years, fær inn yearFrom, yearTo og country og birtir línurit af vergri landsframleiðslu í því landi frá árinu yearFrom fram að yearTo. Síðan er kallað á fallið með inntakinu (1990,2018,Namibia). Fall númer tvö, barplot_country_gdp_by_years fær einnig inn yearFrom,yearTo og country og gerir það sama og fyrsta fallið nema að það birtir súlurit í stað línurits. Þá er kallað á fallið með inntakinu (2005,2018,"Iceland"). Þriðja fallið, lineplot_countries_gdp_by_years fær inn þrjár breytur, yearFrom, yearTo og conts, þar sem conts er vigur af löndum og birtir línurit af vergri landsframleiðslu á þessum löndum yfir þetta tímabil á sama grafi. Kallað er síðan á fallið með inntökunum (1990,2018,Namibia", conts = c("Chad",.....,"Switzerland")) (sjá má öll lönd í kóða). Fjórða fallið, barplot_countries_gdp_by_year fær inn year (ár) og conts, þar sem að conts er aftur vigur landa, og birtir súlurit af vergri landsframleiðslu hjá þessum löndum á þessu ári. Kallað er á fallið með inntakinu (1999,conts = c("Namibia","Nigeria",...,"Burundi")) (sjá má öll lönd í kóða). Fimmta fallið worldplot_by_year fær in year (ár) og fyllir inn á landakort verga landsframleiðslu allra landa sem hafa skilgreinda verga landsframleiðslu fyrir það ár. Inni í fallinu er gdp_by_country_code og world gagnasettið, sem fengið er út frá sf pakkanum, sameinað þannig að hægt sé að færa upplýsingarnar frá gdp_by_country_code yfir í world svo hægt sé að lita löndin. Skalinn er frá gulum (hæsta verga landsframleiðslan) niður í svartan (lægsta verga landsframleiðslan), en þau lönd sem hafa ekki skilgreinda verga landsframleiðslu það árið eru lituð grá. Kallað er á fallið með inntakinu (2000). Síðast en ekki síst er fallið continentplot_by_year sem fær inn heimsálfu og ár, síar síðan world gagnasettið þannig að aðeins verði lönd eftir úr þeirri heimsálfu, það ár og teiknar síðan upp mynd líkt og fallið worldplot_by_year.
+Hér er gdp gögnunum lýst myndrænt með ýmsum föllum. Það fyrsta, lineplot_country_gdp_by_years, fær inn yearFrom, yearTo og country og birtir línurit af vergri landsframleiðslu í því landi frá árinu yearFrom fram að yearTo. Fyrst er kallað á fallið með inntakinu (1960,2018,"Nigera"). Fall númer tvö, barplot_country_gdp_by_years fær einnig inn yearFrom,yearTo og country og gerir það sama og fyrsta fallið nema að það birtir súlurit í stað línurits. Þá er kallað á fallið með inntakinu (1960,2018,"Iceland"). Þriðja fallið, lineplot_countries_gdp_by_years fær inn þrjár breytur, yearFrom, yearTo og conts, þar sem conts er vigur af löndum og birtir línurit af vergri landsframleiðslu á þessum löndum yfir þetta tímabil á sama grafi. Síðan er kallað á fallið með inntökunum (1990,2018, conts = c("Namibia","Chad",.....,"Switzerland")) (sjá má öll lönd í kóða). Fjórða fallið, barplot_countries_gdp_by_year fær inn year (ár) og conts, þar sem conts er aftur vigur landa, og birtir súlurit af vergri landsframleiðslu hjá þessum löndum á þessu ári. Kallað er á fallið með inntakinu (1999,conts = c("Iceland","Denmark",...,"Burundi")) (sjá má öll lönd í kóða). Fimmta fallið worldplot_by_year fær in year (ár) og fyllir inn á landakort verga landsframleiðslu allra landa sem hafa skilgreinda verga landsframleiðslu fyrir það ár. Inni í fallinu er gdp_by_country_code og world gagnasettið, sem fengið er út frá sf pakkanum, sameinað þannig að hægt sé að færa upplýsingarnar frá gdp_by_country_code yfir í world svo hægt sé að lita löndin. Skalinn er frá gulum (hæsta verga landsframleiðslan) niður í svartan (lægsta verga landsframleiðslan), en þau lönd sem hafa ekki skilgreinda verga landsframleiðslu það árið eru lituð grá. Kallað er á fallið með inntakinu (2000). Síðast en ekki síst er fallið continentplot_by_year sem fær inn heimsálfu og ár, síar síðan world gagnasettið þannig að aðeins verði lönd eftir úr þeirri heimsálfu, það ár og teiknar síðan upp mynd líkt og fallið worldplot_by_year.
 
 
 ```{r, warning=FALSE}
@@ -146,9 +150,9 @@ continentplot_by_year <- function(cont, year) {
   theme(plot.title = element_text(lineheight=.8, face="bold"))+ggtitle(chr)+theme_bw()
 }
 
-lineplot_country_gdp_by_years(1990,2018,"Nigeria")
-barplot_country_gdp_by_years(2005,2018,"Iceland")
-lineplot_countries_gdp_by_years(1990,2018,conts=c("Namibia", "Chad", "Nigeria","Niger", "United States","Serbia","Russian Federation","Iceland","Denmark","Greece","Switzerland"))
+lineplot_country_gdp_by_years(1960,2018,"Nigeria")
+barplot_country_gdp_by_years(1960,2018,"Iceland")
+lineplot_countries_gdp_by_years(1960,2018,conts=c("Namibia", "Chad", "Nigeria","Niger", "United States","Serbia","Russian Federation","Iceland","Denmark","Greece","Switzerland"))
 barplot_countries_gdp_by_year(1999,conts=c("Iceland","Denmark","Greece","Luxembourg","Burundi"))
 worldplot_by_year(2000)
 continentplot_by_year("Africa",2016)
@@ -157,26 +161,19 @@ continentplot_by_year("Africa",2016)
 
 ## Frekari innlestur og úrvinnsla gagna
 
-Til þess að geta borið gögnin saman viljum við frekar skoða verga þróunaraðstoð í stað heildarþróunaraðstoð fyrir hvert land. Til þess að gera það er ný tafla frá alþjóðabankanum lesin inn sem sýnir fólksfjölda í hverju landi á hverju ári inn í pop töfluna. Henni er síðan umbreytt á það form sem við viljum fá hana með gather fallinu, þar sem dálkarnir verða, Country.Name, Country.Code, Year og Population. Síðan er þessi tafla sameinuð devhelp_by_country_code með Country id-inu og árinu og dálkunum síðan raðað þannig að country id-ið og country name-ið sé fremst. Síðan er búinn til nýr dálkur, devaid_per_capita þar sem hvert gildi samsvarar þróunaraðstoðinni deilt með fólksfjöldanum á hverju ári fyrir hvert land. 
+Til þess að geta borið gögnin saman viljum við frekar skoða verga þróunaraðstoð í stað heildarþróunaraðstoðar fyrir hvert land. Til þess að gera það er ný tafla frá alþjóðabankanum lesin inn sem sýnir fólksfjölda í hverju landi á hverju ári inn í pop töfluna. Henni er síðan umbreytt á það form sem við viljum fá hana með gather fallinu, þar sem dálkarnir verða, Country.Name, Country.Code, Year og Population. Síðan er þessi tafla sameinuð devhelp_by_country_code með Country id-inu og árinu og dálkunum síðan raðað þannig að country id-ið og country name-ið sé fremst. Síðan er búinn til nýr dálkur, devaid_per_capita þar sem hvert gildi samsvarar þróunaraðstoðinni deilt með fólksfjöldanum á hverju ári fyrir hvert land. Sum lönd erum með skilgreinda neikvæða þróunaraðstoð sem þýðir að heildarfjárstreymi þróunarstuðnings er neikvæður, þ.e. að landið hefur á viðkomandi ári greitt til baka af höfuðstóli lána vegna þróunaraðstoðar sem það hefur notið á fyrri árum en það sem nemur stuðningi á árinu. Til einföldunar læt ég þær breytur verða 0 þannig að verga þróunaraðstoðin taki einnig gildið 0 fyrir viðkomandi ár.
 
 ```{r, warning = FALSE}
 pop<-read.csv(file="population/API_SP.POP.TOTL_DS2_en_csv_v2_422125.csv",sep=",",skip=4,header=T)
 colnames(pop)<-gsub('X',"",colnames(pop),fixed=TRUE)
-pop <- pop[ -c(3:34,64:65) ]
+pop <- na.omit(pop[ -c(3,4,64:65) ])
 pop <- pop %>% gather(Year, Population, -Country.Name, -Country.Code)
 newdevaid <- merge(devaid_by_country_code,pop,by.x=c("Country_id","Year"),by.y=c("Country.Code","Year"))
 newdevaid <- newdevaid[c(1,4,2,3,5)]
-newdevaid[is.na(newdevaid)] <- 0
 newdevaid[newdevaid < 0] <- 0
-newdevaid[, 5][newdevaid[, 5] == 0] <- NA
 newdevaid$devaid_per_capita <- newdevaid$Development_aid / newdevaid$Population
-newdevaid <- do.call(data.frame,lapply(newdevaid, function(x) replace(x, is.infinite(x),NA)))
 head(newdevaid)
-
 ```
-
-
-
 
 ## Myndræn framsetning á vergri þróunaraðstoð
 
@@ -232,77 +229,96 @@ continentplot_devaid_by_year <- function(cont, year) {
   theme(plot.title = element_text(lineheight=.8, face="bold"))+ggtitle(chr)+theme_bw()
 }
 
-lineplot_country_devaid_by_years(1990,2017,"Namibia")
+lineplot_country_devaid_by_years(1988,2017,"Namibia")
 barplot_country_devaid_by_years(2005,2017,"Sierra Leone")
 lineplot_countries_devaid_by_years(1990,2017,conts=c("Sierra Leone", "Liberia", "Mozambique","Malawi","Uganda"))
 barplot_countries_devaid_by_year(2005,conts=c("Sierra Leone", "Liberia", "Mozambique","Malawi","Uganda"))
 worldplot_devaid_by_year(2014)
-continentplot_devaid_by_year("Africa",2004)
+continentplot_devaid_by_year("Africa",2010)
 ```
 
 ## Enn frekari úrvinnsla og gagnahreinsun
 
-Til þess að fá gögnin á endanlegt, þægilegt form, viljum við samaeina töflur enn og aftur, að þessu sinni sameinum við newdevaid og gdp_by_country code og þá erum við komin með allar upplýsingar sem við viljum fá í eina töflu.
+Til þess að fá gögnin á endanlegt, þægilegt form, viljum við samaeina töflur enn og aftur, að þessu sinni sameinum við newdevaid og gdp_by_country code og þá erum við komin með allar upplýsingar sem við viljum fá í eina töflu. Enn og aftur er world gagnasettið sótt og þróunaraðstoðar- og landsframleiðslugagnasettin sameinuð í eitt gagnasett, final_table. Síðan er bætt við þá töflu continent og region dálkunum til þess að hægt verði að einskorða gröf við ákveðnar heimsálfur eða hluta heimsálfa með aðstoð world gagnasettsins.
 
 ```{r}
-
+world <- ne_countries(scale = "medium", returnclass = "sf")
 final_table<-na.omit(merge(newdevaid,gdp_by_country_code,by = c("Country_id","Year"),all.x=TRUE))
 final_table<-final_table%>%filter(Year != 2018)
+final_table$continent<-world$continent[match(final_table$Country_id,world$brk_a3)]%>%as.factor()
+final_table$region<-world$subregion[match(final_table$Country_id,world$brk_a3)]%>%as.factor()
 ```
 
 
-## Gagnagreining
+## Gagnagreining og samanburður gagna
 
 
-Hér verður rýnt í gögnin og skoðað margvíslegar breytur.
+Hér verður rýnt í gögnin og ýmsir þættir skoðaðir. Fyrst bý ég til þrjú föll, sem fá inn heimsálfu og sýna þá hvaða lönd eru með hæstu meðal vergu landsframleiðsluna á árabilinu 2000-2018, og hvaða lönd hafa hlotið mestu vergu þróunaraðstoð að meðaltali yfir þetta sama árabil hins vegar. Þetta árabil er valið til þess að fá grófa mynd af því hvernig löndin standa. Síðan er kallað á öll föllin með inntakinu "Africa", sem er sú heimsáfla sem er áhugaverðust að rýna í þegar að þessum málum kemur. Síðan er skoðað hvaða lönd skora hæst (eða lægst) á þessum sviðum um allan heim með því að búa til nýju töflurnar highest_devaid_overall, highest_gdp_overall og lowest_gdp_overall. 
 
 
 ```{r}
-highest_gdp_of_year <- function(year) {
-  df<-final_table%>%filter(year == Year)
-  df <- df[order(-df$GDP_per_capita), ]
-  df <- df[ -c(1,2,4,5,6) ]
-  head(df)
-  kable(head(df), row.names = FALSE)%>%kable_styling()
+highest_gdp_of_continent <- function(cont) {
+  df<-final_table%>%filter(cont == continent & Year>=2000 & Year<=2018)
+  df<-df%>%group_by(Country.Name)%>%
+  summarise(avg_GDP_per_capita = mean(GDP_per_capita))%>%
+  arrange(desc(avg_GDP_per_capita))
+  kable(head(df), row.names = FALSE, caption = sprintf("Highest average GDP per capita in %s",cont))%>%kable_styling()
 }
 
-lowest_gdp_of_year <- function(year) {
-  df<-final_table%>%filter(year == Year)
-  df <- df[order(df$GDP_per_capita), ]
-  df <- df[ -c(1,2,4,5,6) ]
-  head(df)
-  kable(head(df), row.names = FALSE)%>%kable_styling()
+lowest_gdp_of_continent <- function(cont) {
+  df<-final_table%>%filter(cont == continent & Year>=2000 & Year<=2018)
+  df<-df%>%group_by(Country.Name)%>%
+  summarise(avg_GDP_per_capita = mean(GDP_per_capita))%>%
+  arrange(avg_GDP_per_capita)
+  kable(head(df), row.names = FALSE, caption = sprintf("Lowest average GDP per capita in %s",cont))%>%kable_styling()
 }
 
-highest_devaid_of_year <- function(year) {
-  df<-final_table%>%filter(year == Year)
-  df <- df[order(-df$GDP_per_capita), ]
-  df <- df[ -c(1,2,4,5,6) ]
-  head(df)
-  kable(head(df), row.names = FALSE)%>%kable_styling()
-}
-highest_devaid_overall <- function() {
-  
+highest_devaid_of_continent <- function(cont) {
+  df<-final_table%>%filter(cont == continent & Year>=2000 & Year<=2018)
+  df<-df%>%group_by(Country.Name)%>%
+  summarise(avg_devaid_per_capita = mean(devaid_per_capita))%>%
+  arrange(desc(avg_devaid_per_capita))
+  kable(head(df), row.names = FALSE, caption = sprintf("Highest average development aid per capita in %s",cont))%>%kable_styling()
 }
 
-highest_gdp_overall <- function() {
-  
-}
+highest_devaid_overall <- final_table%>%filter(Year>=2000 & Year<=2018)%>%
+  group_by(Country.Name)%>%
+  summarise(avg_devaid_per_capita = mean(devaid_per_capita))%>%
+  arrange(desc(avg_devaid_per_capita))
 
-highest_gdp_of_year(1999)
-lowest_gdp_of_year(1999)
-highest_gdp_of_year(1999)
+highest_gdp_overall <- final_table%>%filter(Year>=2000 & Year<=2018)%>%
+  group_by(Country.Name)%>%
+  summarise(avg_GDP_per_capita = mean(GDP_per_capita))%>%
+  arrange(desc(avg_GDP_per_capita))
+
+lowest_gdp_overall <- final_table%>%filter(Year>=2000 & Year<=2018)%>%
+  group_by(Country.Name)%>%
+  summarise(avg_GDP_per_capita = mean(GDP_per_capita))%>%
+  arrange(avg_GDP_per_capita)
+
+
+highest_gdp_of_continent("Africa")
+lowest_gdp_of_continent("Africa")
+highest_devaid_of_continent("Africa")
+kable(head(highest_devaid_overall), row.names = FALSE, caption = sprintf("Highest average development aid per capita in the world"))%>%kable_styling()
+kable(head(highest_gdp_overall), row.names = FALSE, caption = sprintf("Highest average GDP per capita in the world"))%>%kable_styling()
+kable(head(lowest_gdp_overall), row.names = FALSE, caption = sprintf("Lowest average GDP per capita in the world"))%>%kable_styling()
 
 ```
 
+Hér kemur ef til vill á óvart að Miðbaugs-Gínea, Líbía og Gabon skuli toppa listann yfir afríkulöndin með hæstu vergu landsframleiðsluna, þar sem meðal verga landsframleiðsla Gíneumanna hefur á þessu tímabili verið tvöfalt hærri en hjá Suður-Afríku. Þetta sýnir hvað olía getur verið gífurlega afdrifrík og mikilvæg náttúrauðlind og það kemur enn betur fram þegar litið er á þrjú efstu löndin á listanum yfir hæstu meðal verga landsframleiðslu í heiminum, en þau eru öll mikil olíuveldi. Einnig er áhugavert að sjá að löndin í Afríku sem eru með lægstu vergu landsframleiðsluna eru hvergi sjáanleg meðal landanna sem hlotið hafa mestu þróunaraðstoðina. Þriðji áhugaverði punkturinn sem vert er að nefna að efstu löndin á listanum yfir löndin með lægstu vergu landsframleiðsluna í Afríku eru nákvæmlega sömu lönd og eru efst í listanum yfir löndin með lægstu vergu landsframleiðsluna í heiminum. Að lokum er einnig áhugavert að sjá að hvað Namibía, þróunarland sem mikið hefur verið í fjölmiðlum upp á síðkastið er ofarlega á bæði listanum yfir hæstu vergu landsframleiðslu í Afríku og er jafnframt á listanum yfir löndin sem hafa fengið mestu þróunaraðstoðina.
 
 
+Hér eru föll sem voru búin til fyrr í skýrslunni endurnýtt svo hægt sé að kanna gögin enn frekar.
 
+```{r}
+lineplot_countries_gdp_by_years(1990,2017,c("Central African Republic","Sierra Leone"))
+lineplot_countries_devaid_by_years(1990,2017,c("Central African Republic","Sierra Leone"))
+```
 
+Hér sjáum við tvö lönd, Sierra Leone og Mið-Afríkulýðveldið sem hafa bæði orðið fyrir mjög miklu efnahagslegu tjóni á einhverju ári á árabilinu 1990-2018, Sierre Leone árið 2014 þegar að ebólufaraldur tröllreið landinu og Mið-Afríkuveldið þegar borgarastyrjöld átti sér stað þar árið 2012. Við sjáum þá önnur lönd bregðast við þessu þar sem að mikil hækkun í vegri þróunaraðstoð á sér stað í báðum löndum árið 2014. Þetta fær mann ef til vill til að íhuga hvort að eitthvað samband sé á milli vergrar þróunaraðstoðar og vergrar landsframleiðslu, en þó bendir niðurstaðan að með Namibíu til annars. Við skulum kanna þetta frekar. 
 
-## Samanburður gagna
-
-Hér eru gagnasettin sameinuð í eitt gagnasett, merge_dat. Síðan er bætt við þá töflu continent og region dálkunum til þess að hægt verði að einskorða gröf við ákveðnar heimsálfur eða hluta heimsálfa. Síðan er búið til fallið check_correlation_in_africa sem fær in region og teiknar upp scatter plot þar sem verg landsframleiðslua er sett fram á x-ási og verg þróunaraðstoð sett fram á y-ási á viðkomandi svæði innan Afríku. Síðan er kallað á fallið með svæðum sunnan Sahara sem inntök, suðurhluta Afríku, Vestur-Afríku, Austur-Afríku og Mið-Afríku, en einblínt verður á Afríku sunnan Sahara þar sem mikið af þróunarastoð beinist til landa í þeim heimshluta, og er sérstakt áherslusvæði fyrir íslenska þróunarsamvinnu.
+Hér er búið til fallið check_correlation_in_africa sem fær in region og teiknar upp scatter plot þar sem verg landsframleiðslua er sett fram á x-ási og verg þróunaraðstoð sett fram á y-ási á viðkomandi svæði innan Afríku. Síðan er kallað á fallið með svæðum sunnan Sahara sem inntök, suðurhluta Afríku, Vestur-Afríku, Austur-Afríku og Mið-Afríku, en einblínt verður á Afríku sunnan Sahara þar sem mikið af þróunarastoð beinist til landa í þeim heimshluta, og er sérstakt áherslusvæði fyrir íslenska þróunarsamvinnu.
 
 ```{r, warning = FALSE}
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -328,4 +344,4 @@ check_correlation_in_africa("Middle Africa")
 
 ## Niðurstöður
 
-Niðurstöður koma á óvart, þar sem ekki virist vera almenn marktæk fylgni milli vergra þjóðartekna og þróunaraðstoðar. Þess ber að geta að EFnahags- og framfarastofnunin (OECD) hvetur gjafaríki til að færa þróunaraðstoð til þeirra ríkja þar sem fátækt er mest. Ekki er hægt að greina heildrænt mynstur innan svæðanna, en búast hefði mátt við línulegri fylgni með neikvæðri hallatölu. Þó er ljóst að staðan er eilítið mismunandi milli svæða. Þannig njóta lönd í sunnanverðri Afríku minni aðstoðar en lönd annars vegar í álfunni (hér athugist að y-ásinn er á ólíkum kvörðum), enda eru þjóðartekjur hærri á því svæði. Til að kanna betur orsakatengsl, er gagnlegt að rýna í gögn einstakra landa og jafnframt að taka tillit til tímamarka og þess að áhrifin geta verið á báða bóga, umfangsmikil aðstoð á ákveðnu tímabili getur verið áhrifarík og stuðlað að sjálfbærum hagvexti sem kemur fram nokkrum árum síðar. Einnig getur efnahagsleg velgengni orðið til þess að gjafaríki draga úr þróunaraðstoð sinni til viðkomandi lands. Sem dæmi má nefna að Efnahags- og framfarastofnunin skiptir löndum í tekjuflokka, sem gjafalönd taka tillit til og þegar farið er yfir ákveðna þröskulda í vergum þjóðartekjum, getur slíkt haft veruleg áhrif á stuðning. Sveiflur í stuðningi, s.s. vegna stórra verkefna til innviðauppbyggingar geta einnig þýtt að sveiflur í þróunaraðstoð verða meiri fyrir minni hagkerfi þar sem gögnin miða við íbúafjölda. Þá hafa staðbundin áföll veruleg áhrif, svo sem vopnuð átök og náttúruhamfarir. Slíkir þættir hafa áhrif á gögnin og alhæfingargildi niðurstaðna. 
+Niðurstöður koma á óvart, þar sem ekki virist vera almenn marktæk fylgni milli vergra þjóðartekna og þróunaraðstoðar. Þess ber að geta að Efnahags- og framfarastofnunin (OECD) hvetur gjafaríki til að færa þróunaraðstoð til þeirra ríkja þar sem fátækt er mest. Ekki er hægt að greina heildrænt mynstur innan svæðanna, en búast hefði mátt við línulegri fylgni með neikvæðri hallatölu. Þó er ljóst að staðan er eilítið mismunandi milli svæða. Þannig njóta lönd í sunnanverðri Afríku minni aðstoðar en lönd annars vegar í álfunni (hér athugist að y-ásinn er á ólíkum kvörðum), enda eru þjóðartekjur hærri á því svæði. Til að kanna betur orsakatengsl, er gagnlegt að rýna í gögn einstakra landa og jafnframt að taka tillit til tímamarka og þess að áhrifin geta verið á báða bóga, umfangsmikil aðstoð á ákveðnu tímabili getur verið áhrifarík og stuðlað að sjálfbærum hagvexti sem kemur fram nokkrum árum síðar. Lekar úr hagkerfi, s.s. nýting náttúruauðlinda af hálfu erlendra ríkja, sem og fjárstreymi úr landi vegna spillingar getur verið af þeim skala að það skaði efnahag og uppbyggingu einstakra landa, eins og dæmin sýna. Einnig getur efnahagsleg velgengni orðið til þess að gjafaríki draga úr þróunaraðstoð sinni til viðkomandi lands. Sem dæmi má nefna að Efnahags- og framfarastofnunin skiptir löndum í tekjuflokka, sem gjafalönd taka tillit til og þegar farið er yfir ákveðna þröskulda í vergum þjóðartekjum, getur slíkt haft veruleg áhrif á stuðning. Sveiflur í stuðningi, s.s. vegna stórra verkefna til innviðauppbyggingar geta einnig þýtt að sveiflur í þróunaraðstoð verða meiri fyrir minni hagkerfi þar sem gögnin miða við íbúafjölda. Þá hafa staðbundin áföll veruleg áhrif, svo sem vopnuð átök og náttúruhamfarir. Slíkir þættir hafa áhrif á gögnin og alhæfingargildi niðurstaðna. 
